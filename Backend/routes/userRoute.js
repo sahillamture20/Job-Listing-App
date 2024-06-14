@@ -2,6 +2,7 @@ const e = require("express");
 const router = e.Router();
 const bcrypt = require("bcrypt");
 const User = require("../Model/User");
+const jwt = require("jsonwebtoken");
 
 router.get("/", (req, res) => {
   res.json({
@@ -53,9 +54,16 @@ router.post("/login", async (req, res) => {
         message: "User not found",
       });
     }
-    if (password == existingUser.password) {
+    const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
+    if (isPasswordCorrect) {
+      const token = jwt.sign(
+        {email:existingUser.email}, //Payload = object that you neet to convert to string/token
+        'secret', //Secret key for the encrypt token and validation signature  
+        {expiresIn:'1h'}//Optinal argument to make the token expire in time
+      );
       res.status(200).json({
         message: "Login successful",
+        token: token
       });
     } else {
       res.status(401).json({
