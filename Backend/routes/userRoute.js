@@ -3,6 +3,8 @@ const router = e.Router();
 const bcrypt = require("bcrypt");
 const User = require("../Model/User");
 const jwt = require("jsonwebtoken");
+const validateNewUser = require('../middleware/validateNewUser');
+
 
 router.get("/", (req, res) => {
   res.json({
@@ -12,7 +14,7 @@ router.get("/", (req, res) => {
 });
 
 // async = declaring the non-blocking code
-router.post("/register", async (req, res) => {
+router.post("/register", validateNewUser, async (req, res) => {
   try {
     const { name, email, password } = req.body;
 

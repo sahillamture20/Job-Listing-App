@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
 const userRoute = require('./routes/userRoute');
 const jobRoute = require('./routes/jobRoute');
+const verifyToekn = require('./middleware/verifyToken');
 
 const app = express(); // this objec will provide various features like .get(), .post(), etc
 app.use(express.json());
@@ -13,7 +14,8 @@ mongoose
     .catch((err) => console.log(err))
 
 app.use('/user', userRoute);
-app.use('/job', jobRoute);
+app.use('/job', verifyToekn, jobRoute);
+
 app.get("/health", (req, res) => {
     res.json({
         message: "Job listing API is working fine.",
@@ -23,6 +25,7 @@ app.get("/health", (req, res) => {
 });
 
 app.listen( process.env.PORT, () => {
+    console.clear();
     console.log(`Server is running on port ${process.env.PORT}`);
 })
 /*

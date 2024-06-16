@@ -1,9 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const Job = require("../Model/Job");
+const validateNewJob = require("../middleware/validateNewJob");
 
 router.get("/", async (req, res) => {
-  const jobs = await Job.find();
+  const {minSalary, maxSalary, jobType, location, remote} = req.query;
+  console.log(minSalary, maxSalary, jobType, location);
+  const jobs = await Job.find(
+    {
+      monthlySalary: {
+          $gte: minSalary || 0,
+          $lte: maxSalary || 999999999
+      },
+      jobType: jobType || { $exists: true },
+      location: location || { $exists: true },
+      remote: remote == 'true' || { $exists: true },
+  }
+  );
   res.status(200).json({
     message: "Job listing API is working fine.",
     status: true,
@@ -15,7 +28,7 @@ router.get("/", async (req, res) => {
 //company name, logo url, job position, monthly salary, job type,
 //remote, location, job description, about company, skills required, additional information = each user have this
 
-router.post("/add", async (req, res) => {
+router.post("/add", validateNewJob,async (req, res) => {
   const {
     companyName,
     logoUrl,
