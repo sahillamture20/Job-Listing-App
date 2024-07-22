@@ -3,35 +3,47 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
 const userRoute = require('./routes/userRoute');
 const jobRoute = require('./routes/jobRoute');
-const verifyToekn = require('./middleware/verifyToken');
+const errorHandler = require('./middleware/errorHandler');
+const cors = require('cors');
+const path = require("path");
 
-const app = express(); // this objec will provide various features like .get(), .post(), etc
+const app = express();
+app.use(cors());
 app.use(express.json());
 
-mongoose
-    .connect(process.env.MONGO_URL)
-    .then(() => console.log("DB connection successful"))
-    .catch((err) => console.log(err))
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URL).then(() => {
+    console.log('Connected to MongoDB');
+}).catch(err => {
+    console.log('Failed to connect to MongoDB', err);
+});
 
 app.use('/user', userRoute);
-app.use('/job', verifyToekn, jobRoute);
+app.use('/job', jobRoute);
 
-app.get("/health", (req, res) => {
+// http://localhost:3000/health
+app.get('/health', (req, res) => {
     res.json({
-        message: "Job listing API is working fine.",
-        status: true,
+        message: 'Job listing API is working fine',
+        status: 'Working',
         date: new Date().toLocaleDateString()
     });
 });
 
-app.listen( process.env.PORT, () => {
+// REDIRECT PAGE TO 404
+app.use("*", (req, res) => {
+    res.status(404).json({
+        message: 'Endpoint not found',
+        status: 'Error',
+    });
+});
+
+app.use(errorHandler);
+
+app.listen(process.env.PORT, () => {
     console.clear();
     console.log(`Server is running on port ${process.env.PORT}`);
-})
-/*
-    // res.send(); => Allows string as o/p
-    // res.json(); => allows JSON obj as response
-    // res.sendFile() => send files, inages, etc.
-    // res.redirect(); => redirect to another page
-    // res.render(); => render a template
- */
+});

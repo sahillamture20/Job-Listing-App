@@ -1,0 +1,52 @@
+login check = working
+register chcek = working with & witout middleware
+job add check
+
+##########################################################
+Registered without validateNewUser middleware =>
+{
+    "name":"Sahil Lamture",
+    "email":"saihllamture@gmail.com",
+    "mobile":"1254638970",
+    "password":"test@123"
+}
+Registered with validateNewUser middleware =>
+{
+    "name":"rahil Lamture",
+    "email":"raihllamture@gmail.com",
+    "mobile":"5648927361",
+    "password":"rahil@123"
+}
+########################################################
+Login => 
+{
+    "message": "Login successful",
+    "email": "saihllamture@gmail.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NjlkZDEwNDBlZmUwN2I1MDI2YTgyMmIiLCJpYXQiOjE3MjE2MTg4Mjh9.Csr1lKcoAMgNNhdQWMCSIhST4UAJzBFy3Mk9SSRZH_Y"
+}
+#########################################################
+Job added without middleware POST method => http://localhost:3000/job/add
+{
+    "companyName":"Google",
+    "title":"Full Stack Developer",
+    "description":"Handle frontend and backend, collaborate with other teams, should be familier with react, node, express, mongo, etc.",
+    "logoUrl":"https://imgs.search.brave.com/vTLhO_pzN0kiabVcKVcP48PrjPGviLQ4mBX6A0nV34c/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly8xMDAw/bG9nb3MubmV0L3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDE2LzEx/L05ldy1Hb29nbGUt/TG9nby00OTd4NTAw/LmpwZw",
+    "jobPosition":"Junior Developer",
+    "salary":"100000",
+    "location":"Mumbai",
+    "duration":"test",
+    "locationType":"Remote",
+    "information":"test information",
+    "jobType":"Full-Time",
+    "skills":"React, Js, Node, Express, Mongo"
+}
+
+All Job GET method working => http://localhost:3000/job/ 
+
+Get Job by ID GET with params => working [try to implement with query]
+
+Delete job by ID DELETE with params => working [issue: when 1st if we put wrong id, try to implement with ID passed by query]
+
+Update job by ID PUT with params => working [Try to implement with ID passed by query]
+
+filter job by ID with query = not working
